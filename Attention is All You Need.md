@@ -29,7 +29,6 @@ Ryan: 什么是马尔可夫决策过程？
 
 #### 2. Attention Layer
 
-<img src="https://spaces.ac.cn/usr/uploads/2018/01/458889390.png" alt="img" style="zoom: 50%;" />
 $$
 Attention(Q,K,V)=softmax(\frac{QK^\top}{\sqrt{d_k}})\cdot V
 $$
@@ -44,10 +43,6 @@ $$
 我们可以将Attention看成一个二元联合分布(实际上是n个一元分布，不过这个细节并不重要)，如果序列长度都为n，也就是每个元有n个可能的取值，那么这个分布共有$n^2$ 个值。但是，我们将Q, K分别投影到低维后，各自的参数量只有$n × (d/h)$，总的参数量是$2nd/h$。
 
 所以，式(1)就相当于用$2nd/h$的参数量去逼近一个本身有 $n^2$ 个值的量，而我们通常有$2nd/h≪n2$ ，尤其是h比较大时更是如此，因此这种建模有点“强模型所难”，这就是原论文中的“低秩瓶颈(Low-Rank Bottleneck)”的含义。
-
-
-
-
 
 
 

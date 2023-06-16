@@ -12,29 +12,29 @@
 
 在这里，$$p_{k,2i}$$，$$p_{k,2i+1}$$ 分别是位置 *pos* 的编码向量的第2*i*, 2*i* + 1个分量，即每个pos的奇数分量用sin偶数分量用cos，*$$d_{model}$$* 是向量的维度，下图以(10,64) 的张量为例，可以看到只有前20多个位置编码的表征是有信息量的：
 
-![image-20221021114524142](/Users/tomo/Library/Application Support/typora-user-images/image-20221021114524142.png)
+![image-20230616164401489](https://raw.githubusercontent.com/ryanzhangga1991/img_cache/main/uPic/image-20230616164401489.png)
 
 在不考虑位置信息的情况下，文本成分之间的注意力是完全对称的，也就是说，所谓的注意力机制是无法学习到上下关系的，我们无法从结果上区分句子成分的顺序。
 
-<img src="/Users/tomo/Library/Application Support/typora-user-images/image-20221021115839035.png" alt="image-20221021115839035" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/ryanzhangga1991/img_cache/main/uPic/image-20230616164419412.png" alt="image-20230616164419412" style="zoom:50%;" />
 
 这种全对称性需要添加一个新的编码来打破。比如在每个位置上都加上一个不同的编码向量：
 
-<img src="/Users/tomo/Library/Application Support/typora-user-images/image-20221021120044537.png" alt="image-20221021120044537" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/ryanzhangga1991/img_cache/main/uPic/image-20230616164432669.png" alt="image-20230616164432669" style="zoom:50%;" />
 
 #### 2. 倒推论文的二维位置编码
 
 这里简化问题，先仅考虑两个位置编码，m和n为标量，x为自变量，并把位置编码p看做是误差项，使用泰勒展开式展开至2阶：
 
-<img src="/Users/tomo/Library/Application Support/typora-user-images/image-20221021135727630.png" alt="image-20221021135727630" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/ryanzhangga1991/img_cache/main/uPic/image-20230616164448969.png" alt="image-20230616164448969" style="zoom:50%;" />
 
 有意思的来了，可以看到除了最后一项外，第6项是第一个同时包含 , $$p_{m}$$与$$p_{n}$$ 的交互项，希望它能表达一定的相对位置信息。
 
 （泰勒展开是基于原函数的仿造函数，在二阶情况下能模拟一小段源函数的曲率和形状。）
 
-<img src="/Users/tomo/Library/Application Support/typora-user-images/image-20221021170435761.png" alt="image-20221021170435761" style="zoom:50%;" />
+![image-20230616164601705](https://raw.githubusercontent.com/ryanzhangga1991/img_cache/main/uPic/image-20230616164601705.png)
 
-<img src="/Users/tomo/Library/Application Support/typora-user-images/image-20221021140353918.png" alt="image-20221021140353918" style="zoom:50%;" />
+![image-20230616164551803](https://raw.githubusercontent.com/ryanzhangga1991/img_cache/main/uPic/image-20230616164551803.png)
 
 先假设，上式子中的$$\mathcal H$$(黑塞矩阵)为单位矩阵$$\mathcal H=\mathcal I$$，包含相对位置信息的数据项就简化为$$\langle p_{m}，p_{n}\rangle$$ 这两个位置编码的内积。问题再次简化为，存在某个函数*g*使得，
 $$
@@ -109,11 +109,11 @@ $$
 $$
 因此，问题就简化为积分$\int^{1}_{0}e^{i(m-n)\cdot10000^{-t}}dt$的拟合问题，直接在pyplot 画出来，
 
-![image-20221024164034769](/Users/tomo/Library/Application Support/typora-user-images/image-20221024164034769.png)
+![image-20230616164516460](https://raw.githubusercontent.com/ryanzhangga1991/img_cache/main/uPic/image-20230616164516460.png)
 
 同时，苏神也比较了多种函数的可能性
 
-![image-20221024165123039](/Users/tomo/Library/Application Support/typora-user-images/image-20221024165123039.png)
+![image-20230616164531022](https://raw.githubusercontent.com/ryanzhangga1991/img_cache/main/uPic/image-20230616164531022.png)
 
 所以，不一定需要严格按照原文的公式也可以达到类似的效果。
 
