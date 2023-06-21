@@ -1,4 +1,4 @@
-## RoPE:Rotary Position Embedding 
+## Rotary Position Embedding 
 
 苏剑林 https://spaces.ac.cn/
 
